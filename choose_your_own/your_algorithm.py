@@ -3,6 +3,9 @@
 import matplotlib.pyplot as plt
 from prep_terrain_data import makeTerrainData
 from class_vis import prettyPicture
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.tree import DecisionTreeClassifier
 
 features_train, labels_train, features_test, labels_test = makeTerrainData()
 
@@ -24,19 +27,18 @@ plt.scatter(grade_slow, bumpy_slow, color = "r", label="slow")
 plt.legend()
 plt.xlabel("bumpiness")
 plt.ylabel("grade")
-plt.show()
+#plt.show()
 ################################################################################
 
+clf=AdaBoostClassifier(DecisionTreeClassifier(max_depth=1),
+                         algorithm="SAMME",
+                         n_estimators=200)
 
-### your code here!  name your classifier object clf if you want the 
-### visualization code (prettyPicture) to show you the decision boundary
+clf.fit(features_train, labels_train)
 
+labels_pred = clf.predict(features_test)
 
-
-
-
-
-
+print accuracy_score(labels_test, labels_pred)
 
 try:
     prettyPicture(clf, features_test, labels_test)
