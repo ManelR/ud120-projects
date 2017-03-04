@@ -14,9 +14,11 @@ import sys
 sys.path.append("../tools/")
 from feature_format import featureFormat, targetFeatureSplit
 from sklearn.cluster import KMeans
+from sklearn import preprocessing
 import numpy as np
 
-
+def column(matrix, i):
+    return [row[i] for row in matrix]
 
 def Draw(pred, features, poi, mark_poi=False, name="image.png", f1_name="feature 1", f2_name="feature 2"):
     """ some plotting code designed to help you visualize your clusters """
@@ -65,7 +67,7 @@ minvalue=999999999999999
 maxvalue=0.0
 for f1, f2, f3 in finance_features:
     plt.scatter( f1, f2 )
-plt.show()
+#plt.show()
 
 for key, value in data_dict.iteritems():
     if value["salary"] > maxvalue and value["salary"] != 'NaN':
@@ -75,6 +77,14 @@ for key, value in data_dict.iteritems():
 
 print maxvalue
 print minvalue
+
+min_max_scaler_f1 = preprocessing.MinMaxScaler()
+min_max_scaler_f2 = preprocessing.MinMaxScaler()
+
+min_max_scaler_f1.fit_transform(column(finance_features, 0))
+min_max_scaler_f2.fit_transform(column(finance_features, 1))
+
+
 
 ### cluster here; create predictions of the cluster labels
 ### for the data and store them to a list called pred
